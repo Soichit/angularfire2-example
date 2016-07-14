@@ -5,33 +5,46 @@ import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'a
   moduleId: module.id,
   selector: 'app-example3',
   template: `
+  
+  Item: <input type="text" #newItem />
+  Size: <input type="text" #newSize />
+  <button (click)="add(newItem.value, newSize.value)">Add</button>
+  <button (click)="deleteEverything()">Delete All</button>
+  <hr />
+
   <ul>
     <li *ngFor="let item of items | async">
-      <input type="text" #updatesize [value]="item.text" />
-      <button (click)="update(item.$key, updatesize.value)">Update</button>
-      <button (click)="deleteItem(item.$key)">Delete</button>
+      <span (click)="addOptions()">{{item.text}} ({{item.size}})</span>
     </li>
   </ul>
-  <input type="text" #newitem />
-  <button (click)="add(newitem.value)">Add</button>
-  <button (click)="deleteEverything()">Delete All</button>
+  <hr />
+
+
   `,
 })
 export class Example3Component {
   items: FirebaseListObservable<any>;
+
   constructor(af: AngularFire) {
-    this.items = af.database.list('/messages');
+    this.items = af.database.list('/foodItems');
   }
-  add(newName: string) {
-    this.items.push({ text: newName });
+
+  add(newItem: string, newSize: string) {
+    this.items.push({ text: newItem, size: newSize });
   }
+  /*
   update(key: string, newSize: string) {
     this.items.update(key, { size: newSize });
   }
   deleteItem(key: string) {    
     this.items.remove(key); 
   }
+  */
   deleteEverything() {
     this.items.remove();
+  }
+
+  addOptions() {
+
   }
 }
